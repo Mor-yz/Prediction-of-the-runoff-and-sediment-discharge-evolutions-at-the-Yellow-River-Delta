@@ -18,7 +18,7 @@ git clone https://github.com/Mor-yz/Prediction-of-the-runoff-and-sediment-discha
 
 ## Running the code
 
-SAC variables are construct in `sac.py`.
+SAC variables are constructed in `sac.py`.
 
 QBSO code for feature selection is in the folder `qbso-fs-master`. The original QBSO code is in
 

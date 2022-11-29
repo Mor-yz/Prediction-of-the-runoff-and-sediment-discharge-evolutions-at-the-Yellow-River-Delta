@@ -30,7 +30,7 @@ We add RR regressor in `fs_problem.py` file. The codes in this part are explaine
 
 RR after feature selection is in `rr_irr.py`.
 
-Residual Correction is in `rc.py`, which includes EMD and GRU.
+Residual correction is in `rc.py`, which includes EMD and GRU.
 
 ## Data
 

@@ -92,9 +92,8 @@ Y_train = Y_train.values
 Y_test = Y_test.values
 
 
-# 调整学习率与提前终止函数
+# learning rate
 def scheduler(epoch):
-    # 每隔50个epoch，学习率减小为原来的1/10
     if epoch % 50 == 0 and epoch != 0:
         lr = K.get_value(gru.optimizer.lr)
         if lr > 1e-5:
@@ -151,7 +150,7 @@ for i in range(50):
         Y_train_bo = np.array(Y_train_bo)
     history = gru.fit(X_train, Y_train, validation_split=0.1, epochs=100, batch_size=1, callbacks=[reduce_lr])
 
-    # 预测
+    # prediction
     predict = gru.predict(X_test, batch_size=1)
     real_predict = scaler.inverse_transform(np.concatenate((source_x_test, predict), axis=1))
     real_y = scaler.inverse_transform(np.concatenate((source_x_test, Y_test), axis=1))
@@ -171,11 +170,8 @@ ax.spines['top'].set_linewidth(bwith)
 ax.spines['right'].set_linewidth(bwith)
 plt.plot(real_predict, label='real_predict')
 plt.plot(real_y, label='real_y')
-plt.plot(real_y * (1 + 0.15), label='15%上限', linestyle='--', color='green')
-# plt.plot(real_y*(1+0.1),label='10%上限',linestyle='--')
-# plt.plot(real_y*(1-0.1),label='10%下限',linestyle='--')
-plt.plot(real_y * (1 - 0.15), label='15%下限', linestyle='--', color='green')
-# plt.fill_between(range(0, 12), real_y * (1 + 0.15), real_y * (1 - 0.15), color='gray', alpha=0.2)
+plt.plot(real_y * (1 + 0.15), label='15%up', linestyle='--', color='green')
+plt.plot(real_y * (1 - 0.15), label='15%down', linestyle='--', color='green')
 plt.legend()
 plt.show()
 

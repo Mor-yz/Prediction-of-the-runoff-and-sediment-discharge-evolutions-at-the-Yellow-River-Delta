@@ -146,7 +146,7 @@ def extract_nc(path, coord_path, variable_name, precision=3):
             variable[i, j + 1] = f.variables[variable_name][lat_index[j], lon_index[j]]
         # require: nc file only have three dimension
         # f.variables['Rainf_f_tavg'][0, lat_index_lp, lon_index_lp]is a mistake, we only need the file
-        # that lat/lon corssed (1057) rather than meshgrid(lat, lon) (1057*1057)
+        # that lat/lon corssed (1083) rather than meshgrid(lat, lon) (1083*1083)
         print(f"complete read file:{i}")
         f.close()
 
@@ -200,6 +200,6 @@ def overview(path):
     rootgrp.close()
 
 
-path = r"IWUEN"  # path of NC
+path = r"data/original data/IWUEN"  # path of NC
 coord_path = r"coord.txt"  # path of coordinate
 effect = extract_nc(path, coord_path, "iwuen", precision=3)

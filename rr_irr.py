@@ -38,8 +38,8 @@ def r(x, y):
 
 
 # 读文件
-data = pd.read_excel(r'log.xlsx')
-datairri = pd.read_excel(r'kernel.xlsx', sheet_name='spherical')  # choose kernel
+data = pd.read_excel(r'data/original data/log.xlsx')
+datairri = pd.read_excel(r'data/process data/kernel.xlsx', sheet_name='spherical')  # choose kernel
 irrigation = np.array(datairri)
 irrigation = irrigation[:, 2:]
 data = np.array(data)

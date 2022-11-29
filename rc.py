@@ -23,13 +23,13 @@ from keras import backend as K
 from keras.layers import LeakyReLU
 from keras.callbacks import LearningRateScheduler
 from keras.callbacks import EarlyStopping
-from tensorflow.keras import Input, Model, Sequential
+from keras import Input, Model, Sequential
 
 mpl.rcParams['font.sans-serif'] = ['SimHei']
 mpl.rcParams['axes.unicode_minus'] = False
 
 # read excel
-data = pd.read_excel(r'runoff_res.xlsx', sheet_name='Sheet1')  # change the name of file to use sediment or runoff
+data = pd.read_excel(r'data/process data/runoff_res.xlsx', sheet_name='Sheet1')  # change the name of file to use sediment or runoff
 data = np.array(data)
 data = data.T
 y1_res = data.reshape(-1)
@@ -60,12 +60,12 @@ series3 = pd.Series(y3)
 series4 = pd.Series(y4)
 series5 = pd.Series(y5)
 
-# 滞后扩充数据
+# lag
 dataframe1 = pd.DataFrame()
 num_hour = 6
 for i in range(num_hour, 0, -1):
-    dataframe1['t-' + str(i)] = series1.shift(i)  # change series1 to IMF number we want. e.g. series1 means IMF1
-dataframe1['t'] = series1.values  # change series1 to IMF number we want. e.g. series1 means IMF1
+    dataframe1['t-' + str(i)] = series3.shift(i)  # change series1 to IMF number we want. e.g. series1 means IMF1
+dataframe1['t'] = series3.values  # change series1 to IMF number we want. e.g. series1 means IMF1
 dataframe3 = dataframe1.dropna()
 dataframe3.index = range(len(dataframe3))
 
@@ -137,28 +137,28 @@ boot = np.arange(0, 72, 1, int)
 Y_test_bo = []
 # train
 # bootstrap
-for i in range(50):
-    boot_train = np.random.choice(boot, 18, replace=True)
-    X_train_bo = []
-    Y_train_bo = []
-    for j in range(18):
-        X_train_bo = list(X_train_bo)
-        Y_train_bo = list(Y_train_bo)
-        X_train_bo.append(list(X_train[boot_train[j]]))
-        Y_train_bo.append(list(Y_train[boot_train[j]]))
-        X_train_bo = np.array(X_train_bo)
-        Y_train_bo = np.array(Y_train_bo)
-    history = gru.fit(X_train, Y_train, validation_split=0.1, epochs=100, batch_size=1, callbacks=[reduce_lr])
+# for i in range(50):
+#     boot_train = np.random.choice(boot, 18, replace=True)
+#     X_train_bo = []
+#     Y_train_bo = []
+#     for j in range(18):
+#         X_train_bo = list(X_train_bo)
+#         Y_train_bo = list(Y_train_bo)
+#         X_train_bo.append(list(X_train[boot_train[j]]))
+#         Y_train_bo.append(list(Y_train[boot_train[j]]))
+#         X_train_bo = np.array(X_train_bo)
+#         Y_train_bo = np.array(Y_train_bo)
+history = gru.fit(X_train, Y_train, validation_split=0.1, epochs=100, batch_size=1, callbacks=[reduce_lr])
 
-    # prediction
-    predict = gru.predict(X_test, batch_size=1)
-    real_predict = scaler.inverse_transform(np.concatenate((source_x_test, predict), axis=1))
-    real_y = scaler.inverse_transform(np.concatenate((source_x_test, Y_test), axis=1))
-    # real_y = scaler.inverse_transform(Y_test)
-    real_predict = real_predict[:, -1]
-    real_y = real_y[:, -1]
-    Y_test_bo.append(real_predict)
-real_predict = np.mean(Y_test_bo, axis=0)
+# prediction
+predict = gru.predict(X_test, batch_size=1)
+real_predict = scaler.inverse_transform(np.concatenate((source_x_test, predict), axis=1))
+real_y = scaler.inverse_transform(np.concatenate((source_x_test, Y_test), axis=1))
+# real_y = scaler.inverse_transform(Y_test)
+real_predict = real_predict[:, -1]
+real_y = real_y[:, -1]
+# Y_test_bo.append(real_predict)
+# real_predict = np.mean(Y_test_bo, axis=0)
 
 # figure
 plt.figure(figsize=(15, 6))
